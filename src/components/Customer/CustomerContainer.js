@@ -9,12 +9,17 @@ const CustomerContainer = () => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    getCustomers()
-      .then((res) => {
+    const fetchUsers = async () => {
+      try {
+        const res = await getCustomers();
         setCustomers(res.data["hydra:member"]);
-      })
-      .catch((err) => console.error(err))
-      .finally(() => setLoading(false));
+      } catch (err) {
+        console.log(err);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchUsers();
   }, []);
 
   return (
@@ -24,9 +29,7 @@ const CustomerContainer = () => {
         <Circle />
       ) : (
         customers.map((customer, index) => {
-          return (
-            <Customer key={index} customer={customer} />
-          );
+          return <Customer key={index} customer={customer} />;
         })
       )}
     </>
